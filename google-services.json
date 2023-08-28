@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "618065169558",
+    "project_id": "besafe-a909e",
+    "storage_bucket": "besafe-a909e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618065169558:android:e5062b810e2b12863c86b7",
+        "android_client_info": {
+          "package_name": "com.besafe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618065169558-ktoeochq5sehceoutn3nr3g0r2qce3fc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4XZQVcWtptaSDrkRvvXQuwMoDoXANat8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618065169558-ktoeochq5sehceoutn3nr3g0r2qce3fc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
