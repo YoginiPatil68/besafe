@@ -68,7 +68,7 @@ export function ComplaintsLayout({ route }: any) {
         activity: false,
         status: ""
     });
-    const [police, setPolice] = React.useState<any[]>();
+    const [police, setPolice] = React.useState<any[]>([]);
     const [assignComplaint, setAssignComplaint] = React.useState({
         activity: false,
         _id: "",
@@ -123,6 +123,7 @@ export function ComplaintsLayout({ route }: any) {
                     }
                 });
                 const res = await user.json();
+                console.log(res);
                 if (res.success) {
                     setPolice(res.user);
                 }
@@ -132,6 +133,7 @@ export function ComplaintsLayout({ route }: any) {
     }
 
     async function handleAssignPolice() {
+        console.log(assignComplaint);
         if (assignComplaint.name !== "" && assignComplaint._id !== "") {
             const cred = await getCredentials();
             if (cred) {
@@ -150,7 +152,8 @@ export function ComplaintsLayout({ route }: any) {
                                 authorization: `Bearer ${cred.access_token}`
                             }
                         });
-                        // const data = await res.json();
+                        const data = await res.json();
+                        setAssignComplaint({ _id: "", activity: false, name: "" });
                     } catch (error) {
                         console.log(error);
                     }
@@ -222,9 +225,9 @@ export function ComplaintsLayout({ route }: any) {
                     <Button
                         btnName="Assign Complaint"
                         weight="200"
-                        onPress={() => setAssignComplaint({ ...assignComplaint, activity: true })}
+                        onPress={() => {setAssignComplaint({ ...assignComplaint, activity: true }); console.log("Click")}}
                     />
-                )}
+                )} 
             </>
         );
     };
@@ -378,7 +381,8 @@ export function ComplaintsLayout({ route }: any) {
                                         setAssignComplaint({
                                             ...assignComplaint,
                                             _id: item._id,
-                                            name: item.name
+                                            name: item.name,
+                                            activity: false
                                         });
                                     }}
                                     key={item._id}
