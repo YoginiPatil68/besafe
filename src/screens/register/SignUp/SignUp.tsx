@@ -135,13 +135,13 @@ export default function SignUp({ navigation, route }: NavigationProps<"SignUp">)
                                             placeholder={`${t("pass")} ${t("cPass")}`}
                                             style={{ marginVertical: 12 }}
                                         />
-                                        {route.params.agree && (
+                                        {/* {route.params.agree && (
                                             <TextCheckBox
                                                 toggleCheckBox={toggleCheckBox}
                                                 setToggleCheckBox={setToggleCheckBox}
                                                 agree={route.params.agree}
                                             />
-                                        )}
+                                        )} */}
                                         <Button
                                             btnName={t("signUp")}
                                             weight="400"

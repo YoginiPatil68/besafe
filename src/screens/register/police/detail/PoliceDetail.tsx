@@ -69,11 +69,14 @@ export function PoliceDetail({ route, navigation }: NavigationProps<"PoliceDetai
                         authorization: `Bearer ${creds.access_token}`
                     }
                 });
+                console.log(upPaper.status);
                 const paper = await upPaper.json();
                 try {
+                    console.log(verificationDetails);
+                    const {phoneNo, ...vDetails} = verificationDetails;
                     if (paper.success) {
                         const data = {
-                            ...verificationDetails,
+                            ...vDetails,
                             verificationPaper: paper.uri
                         };
                         const res = await fetch(policeDetails, {
@@ -84,6 +87,8 @@ export function PoliceDetail({ route, navigation }: NavigationProps<"PoliceDetai
                                 authorization: `Bearer ${creds.access_token}`
                             }
                         });
+                        console.log(res);
+                        console.log(await res.json());
                         const user = await res.json();
                         if (user.success) {
                             dispatch(userData(user));

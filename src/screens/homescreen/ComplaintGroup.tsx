@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { View, ScrollView, TouchableWithoutFeedback, Modal } from "react-native";
 import { Background, StatusDetail, Text, DateAndTime, ComplaintLoader } from "@components";
 import { NavigationProps } from "@types";
@@ -20,6 +20,8 @@ type multiProps = any[];
 export function ComplaintGroup({ navigation }: NavigationProps<"ViewPost">): ReactElement {
     const { t } = useTranslation();
 
+    const [data, setData] = useState([]);
+
     const [loading, setLoading] = React.useState(false);
     const getAllComplaints: multiProps = useSelector(
         (state: RootStateOrAny) => state.auth.complaints
@@ -27,8 +29,10 @@ export function ComplaintGroup({ navigation }: NavigationProps<"ViewPost">): Rea
     const dispatch = useDispatch();
     async function getComplaints() {
         const data = await getCredentials();
+        console.log(data);
         if (data) {
             if (!isTokenExpired(data.access_token)) {
+                console.log(data.access_token);
                 const res = await fetch(complaints, {
                     method: "GET",
                     headers: {
@@ -36,31 +40,38 @@ export function ComplaintGroup({ navigation }: NavigationProps<"ViewPost">): Rea
                         authorization: `Bearer ${data.access_token}`
                     }
                 });
+                console.log(res);
+                
                 const complaint = await res.json();
-
-                dispatch(userComplaints(complaint));
+                
+                console.log(complaint);
+                setData(complaint.myComplaints);
+                // dispatch(userComplaints(complaint));
+                setLoading(false);
                 //active status to be send from backend to login police
             }
         }
     }
 
     useEffect(() => {
-        const ac = new AbortController();
-        initiateSocketConnection((data: any) => {
-            if (data) {
-                getComplaints();
-                subscribeToChat((err: any, data: any) => {
-                    if (data.success) {
-                        getComplaints();
-                    }
-                });
-                setLoading(true);
-            }
-        });
-        return function cleanup() {
-            ac.abort();
-            closeSocket();
-        };
+        getComplaints();
+        // const ac = new AbortController();
+        // initiateSocketConnection((data: any) => {
+        //     console.log(data);
+        //     if (data) {
+        //         getComplaints();
+        //         subscribeToChat((err: any, data: any) => {
+        //             if (data.success) {
+        //                 getComplaints();
+        //             }
+        //         });
+        //         setLoading(true);
+        //     }
+        // });
+        // return function cleanup() {
+        //     ac.abort();
+        //     closeSocket();
+        // };
     }, []);
     const [x, setX] = React.useState({ state: false, id: "" });
 
@@ -77,11 +88,12 @@ export function ComplaintGroup({ navigation }: NavigationProps<"ViewPost">): Rea
                 <Text style={{ color: "#FFF", marginBottom: 18, textAlign: "center" }}>
                     {t("reportCom")}
                 </Text>
-                {!loading && <ComplaintLoader />}
+                {loading && <ComplaintLoader />}
                 <View>
+                    {data.length === 0 && <Text style={{color: "#fff"}}>No Complaints Found</Text>}
                     <ScrollView>
-                        {getAllComplaints &&
-                            getAllComplaints.map((item: any, index) => {
+                        {data &&
+                            data.map((item: any, index) => {
                                 return (
                                     <TouchableWithoutFeedback
                                         key={index}
