@@ -45,6 +45,7 @@ export default function SignUp({ navigation, route }: NavigationProps<"SignUp">)
                 },
                 body: JSON.stringify({ ...values })
             });
+            console.log(res);
             const user = await res.json();
             console.log(user);
             if (user.success) {

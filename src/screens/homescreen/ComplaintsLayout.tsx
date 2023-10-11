@@ -61,6 +61,7 @@ function Police({ item, select }: any) {
         </View>
     );
 }
+
 export function ComplaintsLayout({ route }: any) {
     const { t } = useTranslation();
 
@@ -153,6 +154,7 @@ export function ComplaintsLayout({ route }: any) {
                             }
                         });
                         const data = await res.json();
+                        console.log(data);
                         setAssignComplaint({ _id: "", activity: false, name: "" });
                     } catch (error) {
                         console.log(error);
@@ -164,6 +166,11 @@ export function ComplaintsLayout({ route }: any) {
             setAssignComplaint({ _id: "", activity: false, name: "" });
         }
     }
+
+
+    React.useEffect(()=>{
+        console.log("assign complent",assignComplaint)
+    },[assignComplaint])
 
     React.useEffect(() => {
         const ac = new AbortController();
@@ -382,7 +389,6 @@ export function ComplaintsLayout({ route }: any) {
                                             ...assignComplaint,
                                             _id: item._id,
                                             name: item.name,
-                                            activity: false
                                         });
                                     }}
                                     key={item._id}

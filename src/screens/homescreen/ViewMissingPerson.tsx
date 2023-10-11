@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableWithoutFeedback, Modal } from "react-native";
 import { Background, StatusDetail, Text, DateAndTime, ComplaintLoader } from "@components";
 import { NavigationProps } from "@types";
@@ -42,6 +42,8 @@ export function ViewMissingPerson({ navigation }: NavigationProps<"ViewMissingPe
         (state: RootStateOrAny) => state.complaints.missingPerson
     );
 
+    const [complaints, setComplaints] = React.useState<any[]>([]);
+
     const dispatch = useDispatch();
     async function getComplaints() {
         const data = await getCredentials();
@@ -55,7 +57,9 @@ export function ViewMissingPerson({ navigation }: NavigationProps<"ViewMissingPe
                     }
                 });
                 const complaint = await res.json();
-                dispatch(userMissingPerson(complaint));
+                console.log(complaint);
+                setComplaints(complaint.myComplaints);
+                // dispatch(userMissingPerson(complaint));
 
                 //active status to be send from backend to login police
             }
@@ -63,25 +67,25 @@ export function ViewMissingPerson({ navigation }: NavigationProps<"ViewMissingPe
     }
 
     useEffect(() => {
-        const ac = new AbortController();
-        initiateSocketConnection((data: boolean) => {
-            if (data) {
+        // const ac = new AbortController();
+        // initiateSocketConnection((data: boolean) => {
+        //     if (data) {
                 getComplaints();
                 // AllMissingPerson((err: any, data: any) => {
                 //     dispatch(userMissingPerson(data));
                 // });
-                subscribeToChat((err: any, data: any) => {
-                    if (data.success) {
-                        getComplaints();
-                    }
-                });
-                setLoading(true);
-            }
-        });
-        return function cleanup() {
-            ac.abort();
-            closeSocket();
-        };
+        //         subscribeToChat((err: any, data: any) => {
+        //             if (data.success) {
+        //                 getComplaints();
+        //             }
+        //         });
+        //         setLoading(true);
+        //     }
+        // });
+        // return function cleanup() {
+        //     ac.abort();
+        //     closeSocket();
+        // };
     }, []);
     const [x, setX] = React.useState({ state: false, id: "" });
     return (
@@ -97,11 +101,11 @@ export function ViewMissingPerson({ navigation }: NavigationProps<"ViewMissingPe
                 <Text style={{ color: "#FFF", marginBottom: 18, textAlign: "center" }}>
                     {`${t("missPerson")} ${t("complaint")}`}
                 </Text>
-                {!loading && <ComplaintLoader />}
+                {loading && <ComplaintLoader />}
                 <View>
                     <ScrollView>
-                        {getAllComplaints &&
-                            getAllComplaints.map((item: any, index) => {
+                        {complaints &&
+                            complaints?.map((item: any, index) => {
                                 return (
                                     <TouchableWithoutFeedback
                                         key={index}

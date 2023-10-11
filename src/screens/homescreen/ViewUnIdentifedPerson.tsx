@@ -41,6 +41,7 @@ export function ViewUnidentifiedPerson({ navigation }: NavigationProps<"ViewUnid
     const getAllComplaints: multiProps = useSelector(
         (state: RootStateOrAny) => state.complaints.UnidentifiedPerson
     );
+    const [complaints, setComplaints] = React.useState([]);
 
     const dispatch = useDispatch();
     async function getComplaints() {
@@ -55,7 +56,8 @@ export function ViewUnidentifiedPerson({ navigation }: NavigationProps<"ViewUnid
                     }
                 });
                 const complaint = await res.json();
-                dispatch(userUnidentifiedPerson(complaint));
+                console.log(complaint);
+                setComplaints(complaint.myComplaints)
 
                 //active status to be send from backend to login police
             }
@@ -63,25 +65,25 @@ export function ViewUnidentifiedPerson({ navigation }: NavigationProps<"ViewUnid
     }
 
     useEffect(() => {
-        const ac = new AbortController();
-        initiateSocketConnection((data: boolean) => {
-            if (data) {
+        // const ac = new AbortController();
+        // initiateSocketConnection((data: boolean) => {
+        //     if (data) {
                 getComplaints();
                 // AllUnIdPerson((err: any, data: any) => {
                 //     dispatch(userUnidentifiedPerson(data));
                 // });
-                subscribeToChat((err: any, data: any) => {
-                    if (data.success) {
-                        getComplaints();
-                    }
-                });
-                setLoading(true);
-            }
-        });
-        return function cleanup() {
-            ac.abort();
-            closeSocket();
-        };
+        //         subscribeToChat((err: any, data: any) => {
+        //             if (data.success) {
+        //                 getComplaints();
+        //             }
+        //         });
+        //         setLoading(true);
+        //     }
+        // });
+        // return function cleanup() {
+        //     ac.abort();
+        //     closeSocket();
+        // };
     }, []);
     const [x, setX] = React.useState({ state: false, id: "" });
     return (
@@ -97,11 +99,11 @@ export function ViewUnidentifiedPerson({ navigation }: NavigationProps<"ViewUnid
                 <Text style={{ color: "#FFF", marginBottom: 18, textAlign: "center" }}>
                     {`${t("unidPerson")} ${t("complaint")}`}
                 </Text>
-                {!loading && <ComplaintLoader />}
+                {loading && <ComplaintLoader />}
                 <View>
                     <ScrollView>
-                        {getAllComplaints &&
-                            getAllComplaints.map((item, index) => {
+                        {complaints &&
+                            complaints.map((item, index) => {
                                 return (
                                     <TouchableWithoutFeedback
                                         key={index}
